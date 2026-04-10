@@ -171,7 +171,8 @@ async function uploadImage(file, prefix) {
     .upload(fileName, file, { upsert: true });
 
   if (error) {
-    showToast('Upload failed: ' + error.message, 'error');
+    console.error('Upload error details:', JSON.stringify(error));
+    showToast('Upload failed: ' + (error.message || error.error || JSON.stringify(error)), 'error');
     return null;
   }
 
