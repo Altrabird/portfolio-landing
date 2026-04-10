@@ -107,6 +107,20 @@ async function loadProfileData() {
     document.getElementById('about-photo-preview').innerHTML = `<img src="${data.about_photo_url}" class="w-full h-full object-cover rounded-xl">`;
   }
 
+  // Badges
+  document.getElementById('edit-badge1-emoji').value = data.badge_1_emoji || '';
+  document.getElementById('edit-badge1-text').value = data.badge_1_text || '';
+  document.getElementById('edit-badge2-emoji').value = data.badge_2_emoji || '';
+  document.getElementById('edit-badge2-text').value = data.badge_2_text || '';
+
+  // Stats
+  document.getElementById('edit-stat1-emoji').value = data.stat_1_emoji || '';
+  document.getElementById('edit-stat1-label').value = data.stat_1_label || '';
+  document.getElementById('edit-stat2-emoji').value = data.stat_2_emoji || '';
+  document.getElementById('edit-stat2-label').value = data.stat_2_label || '';
+  document.getElementById('edit-stat3-emoji').value = data.stat_3_emoji || '';
+  document.getElementById('edit-stat3-label').value = data.stat_3_label || '';
+
   // Contact
   document.getElementById('edit-email').value = data.email || '';
   document.getElementById('edit-linkedin').value = data.linkedin_url || '';
@@ -129,6 +143,16 @@ async function saveProfile() {
     email: document.getElementById('edit-email').value,
     linkedin_url: document.getElementById('edit-linkedin').value,
     github_url: document.getElementById('edit-github').value,
+    badge_1_emoji: document.getElementById('edit-badge1-emoji').value,
+    badge_1_text: document.getElementById('edit-badge1-text').value,
+    badge_2_emoji: document.getElementById('edit-badge2-emoji').value,
+    badge_2_text: document.getElementById('edit-badge2-text').value,
+    stat_1_emoji: document.getElementById('edit-stat1-emoji').value,
+    stat_1_label: document.getElementById('edit-stat1-label').value,
+    stat_2_emoji: document.getElementById('edit-stat2-emoji').value,
+    stat_2_label: document.getElementById('edit-stat2-label').value,
+    stat_3_emoji: document.getElementById('edit-stat3-emoji').value,
+    stat_3_label: document.getElementById('edit-stat3-label').value,
   };
 
   // Upload avatar if selected

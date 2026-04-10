@@ -52,6 +52,32 @@ async function loadProfile() {
     aboutPhoto.innerHTML = `<img src="${data.about_photo_url}" alt="About photo" class="w-full h-full object-cover rounded-3xl">`;
   }
 
+  // Floating badges
+  const badge1 = document.getElementById('badge-1');
+  const badge2 = document.getElementById('badge-2');
+  if (badge1 && data.badge_1_emoji) {
+    badge1.querySelector('.badge-emoji').textContent = data.badge_1_emoji;
+    badge1.querySelector('.badge-text').textContent = data.badge_1_text;
+  }
+  if (badge2 && data.badge_2_emoji) {
+    badge2.querySelector('.badge-emoji').textContent = data.badge_2_emoji;
+    badge2.querySelector('.badge-text').textContent = data.badge_2_text;
+  }
+
+  // Quick stats
+  const s1e = document.getElementById('stat-1-emoji');
+  const s1l = document.getElementById('stat-1-label');
+  const s2e = document.getElementById('stat-2-emoji');
+  const s2l = document.getElementById('stat-2-label');
+  const s3e = document.getElementById('stat-3-emoji');
+  const s3l = document.getElementById('stat-3-label');
+  if (s1e && data.stat_1_emoji) s1e.textContent = data.stat_1_emoji;
+  if (s1l && data.stat_1_label) s1l.textContent = data.stat_1_label;
+  if (s2e && data.stat_2_emoji) s2e.textContent = data.stat_2_emoji;
+  if (s2l && data.stat_2_label) s2l.textContent = data.stat_2_label;
+  if (s3e && data.stat_3_emoji) s3e.textContent = data.stat_3_emoji;
+  if (s3l && data.stat_3_label) s3l.textContent = data.stat_3_label;
+
   // Contact links
   const emailLink = document.getElementById('contact-email');
   const linkedinLink = document.getElementById('contact-linkedin');
