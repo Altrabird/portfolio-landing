@@ -71,35 +71,47 @@
 
   <!-- Navigation -->
   <nav class="fixed top-0 w-full z-50 glass">
-    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
       <a href="#" class="font-display font-bold text-xl bg-gradient-to-r from-coral to-sunflower bg-clip-text text-transparent">
         HJ
       </a>
-      <div class="flex gap-6 text-sm font-medium">
+      <!-- Mobile hamburger -->
+      <button id="nav-toggle" class="sm:hidden p-2 rounded-lg hover:bg-white/10 transition-colors" onclick="document.getElementById('nav-menu').classList.toggle('hidden')">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <!-- Desktop nav -->
+      <div class="hidden sm:flex gap-6 text-sm font-medium">
         <a href="#hero" class="hover:text-sunflower transition-colors duration-300">Home</a>
         <a href="#about" class="hover:text-mint transition-colors duration-300">About</a>
         <a href="#skills" class="hover:text-ocean transition-colors duration-300">Skills</a>
         <a href="#contact" class="hover:text-blush transition-colors duration-300">Contact</a>
       </div>
     </div>
+    <!-- Mobile nav dropdown -->
+    <div id="nav-menu" class="hidden sm:hidden px-4 pb-4 space-y-2 text-sm font-medium">
+      <a href="#hero" onclick="document.getElementById('nav-menu').classList.add('hidden')" class="block py-2 px-3 rounded-lg hover:bg-white/10 transition-colors">Home</a>
+      <a href="#about" onclick="document.getElementById('nav-menu').classList.add('hidden')" class="block py-2 px-3 rounded-lg hover:bg-white/10 transition-colors">About</a>
+      <a href="#skills" onclick="document.getElementById('nav-menu').classList.add('hidden')" class="block py-2 px-3 rounded-lg hover:bg-white/10 transition-colors">Skills</a>
+      <a href="#contact" onclick="document.getElementById('nav-menu').classList.add('hidden')" class="block py-2 px-3 rounded-lg hover:bg-white/10 transition-colors">Contact</a>
+    </div>
   </nav>
 
   <!-- Hero Section -->
   <section id="hero" class="relative min-h-screen flex items-center justify-center gradient-bg overflow-hidden">
     <!-- Decorative blobs -->
-    <div class="absolute top-20 left-10 w-72 h-72 bg-white/10 blob animate-float"></div>
-    <div class="absolute bottom-20 right-10 w-96 h-96 bg-white/5 blob animate-float-delay"></div>
-    <div class="absolute top-1/3 right-1/4 w-32 h-32 bg-white/10 rounded-full animate-spin-slow"></div>
+    <div class="absolute top-20 left-10 w-40 sm:w-72 h-40 sm:h-72 bg-white/10 blob animate-float"></div>
+    <div class="absolute bottom-20 right-10 w-52 sm:w-96 h-52 sm:h-96 bg-white/5 blob animate-float-delay"></div>
+    <div class="hidden sm:block absolute top-1/3 right-1/4 w-32 h-32 bg-white/10 rounded-full animate-spin-slow"></div>
 
     <div class="relative z-10 text-center px-6 max-w-4xl mx-auto">
       <!-- Avatar -->
-      <div id="profile-avatar" class="mx-auto mb-8 w-40 h-40 rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/40 flex items-center justify-center animate-float shadow-2xl overflow-hidden">
+      <div id="profile-avatar" class="mx-auto mb-6 sm:mb-8 w-28 h-28 sm:w-40 sm:h-40 rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/40 flex items-center justify-center animate-float shadow-2xl overflow-hidden">
         <svg class="w-20 h-20 text-white/80" fill="currentColor" viewBox="0 0 24 24">
           <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
         </svg>
       </div>
 
-      <h1 id="profile-name" class="font-display font-extrabold text-5xl md:text-7xl mb-4 drop-shadow-lg">
+      <h1 id="profile-name" class="font-display font-extrabold text-3xl sm:text-5xl md:text-7xl mb-3 sm:mb-4 drop-shadow-lg">
         Harsidi Bin Junick
       </h1>
       <div class="flex items-center justify-center gap-3 mb-6">
@@ -109,14 +121,14 @@
         </p>
         <span class="w-12 h-1 bg-white/60 rounded-full"></span>
       </div>
-      <p id="profile-tagline" class="text-lg md:text-xl text-white/80 mb-10 max-w-2xl mx-auto leading-relaxed">
+      <p id="profile-tagline" class="text-base sm:text-lg md:text-xl text-white/80 mb-8 sm:mb-10 max-w-2xl mx-auto leading-relaxed px-2">
         Inspiring young minds through creative teaching, innovative technology, and a passion for lifelong learning.
       </p>
-      <div class="flex gap-4 justify-center flex-wrap">
-        <a href="#about" class="px-8 py-3.5 bg-white text-gray-900 font-semibold rounded-full hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+      <div class="flex gap-3 sm:gap-4 justify-center flex-wrap px-4">
+        <a href="#about" class="px-6 sm:px-8 py-3 sm:py-3.5 bg-white text-gray-900 font-semibold rounded-full hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base">
           Get to Know Me
         </a>
-        <a href="#contact" class="px-8 py-3.5 border-2 border-white/60 text-white font-semibold rounded-full hover:bg-white/15 transition-all duration-300">
+        <a href="#contact" class="px-6 sm:px-8 py-3 sm:py-3.5 border-2 border-white/60 text-white font-semibold rounded-full hover:bg-white/15 transition-all duration-300 text-sm sm:text-base">
           Say Hello
         </a>
       </div>
@@ -138,7 +150,7 @@
     <div class="max-w-5xl mx-auto">
       <div class="reveal text-center mb-16">
         <span class="inline-block px-4 py-1.5 bg-ocean/20 text-ocean rounded-full text-sm font-semibold mb-4">About Me</span>
-        <h2 class="font-display font-bold text-4xl md:text-5xl mb-4">
+        <h2 class="font-display font-bold text-2xl sm:text-4xl md:text-5xl mb-4">
           A Little <span class="bg-gradient-to-r from-coral to-sunflower bg-clip-text text-transparent">About Me</span>
         </h2>
       </div>
@@ -155,11 +167,11 @@
                 </div>
               </div>
             </div>
-            <!-- Floating badges -->
-            <div id="badge-1" class="absolute -top-4 -right-4 px-4 py-2 bg-sunflower text-gray-900 rounded-2xl font-semibold text-sm shadow-lg animate-float">
+            <!-- Floating badges (hidden on very small screens) -->
+            <div id="badge-1" class="hidden sm:block absolute -top-4 -right-4 px-3 sm:px-4 py-1.5 sm:py-2 bg-sunflower text-gray-900 rounded-2xl font-semibold text-xs sm:text-sm shadow-lg animate-float">
               <span class="badge-emoji">&#10024;</span> <span class="badge-text">Passionate</span>
             </div>
-            <div id="badge-2" class="absolute -bottom-4 -left-4 px-4 py-2 bg-mint text-gray-900 rounded-2xl font-semibold text-sm shadow-lg animate-float-delay">
+            <div id="badge-2" class="hidden sm:block absolute -bottom-4 -left-4 px-3 sm:px-4 py-1.5 sm:py-2 bg-mint text-gray-900 rounded-2xl font-semibold text-xs sm:text-sm shadow-lg animate-float-delay">
               <span class="badge-emoji">&#128218;</span> <span class="badge-text">Dedicated</span>
             </div>
           </div>
@@ -207,7 +219,7 @@
     <div class="max-w-5xl mx-auto relative z-10">
       <div class="reveal text-center mb-16">
         <span class="inline-block px-4 py-1.5 bg-grape/20 text-grape rounded-full text-sm font-semibold mb-4">Skills</span>
-        <h2 class="font-display font-bold text-4xl md:text-5xl mb-4">
+        <h2 class="font-display font-bold text-2xl sm:text-4xl md:text-5xl mb-4">
           What I <span class="bg-gradient-to-r from-ocean to-grape bg-clip-text text-transparent">Bring</span>
         </h2>
         <p class="text-gray-400 max-w-xl mx-auto">Areas of expertise that I apply daily to make a difference in education.</p>
@@ -267,7 +279,7 @@
     <div class="max-w-3xl mx-auto text-center">
       <div class="reveal">
         <span class="inline-block px-4 py-1.5 bg-blush/20 text-blush rounded-full text-sm font-semibold mb-4">Get In Touch</span>
-        <h2 class="font-display font-bold text-4xl md:text-5xl mb-4">
+        <h2 class="font-display font-bold text-2xl sm:text-4xl md:text-5xl mb-4">
           Let's <span class="bg-gradient-to-r from-blush to-coral bg-clip-text text-transparent">Connect</span>
         </h2>
         <p class="text-gray-400 mb-12 max-w-xl mx-auto">Interested in collaboration, educational technology, or just want to say hello? I'd love to hear from you.</p>
