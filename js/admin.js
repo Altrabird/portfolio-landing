@@ -110,16 +110,21 @@ async function loadProfileData() {
   // Badges
   document.getElementById('edit-badge1-emoji').value = data.badge_1_emoji || '';
   document.getElementById('edit-badge1-text').value = data.badge_1_text || '';
+  setIconPreview('badge1-icon-preview', data.badge_1_icon_url, data.badge_1_emoji);
   document.getElementById('edit-badge2-emoji').value = data.badge_2_emoji || '';
   document.getElementById('edit-badge2-text').value = data.badge_2_text || '';
+  setIconPreview('badge2-icon-preview', data.badge_2_icon_url, data.badge_2_emoji);
 
   // Stats
   document.getElementById('edit-stat1-emoji').value = data.stat_1_emoji || '';
   document.getElementById('edit-stat1-label').value = data.stat_1_label || '';
+  setIconPreview('stat1-icon-preview', data.stat_1_icon_url, data.stat_1_emoji);
   document.getElementById('edit-stat2-emoji').value = data.stat_2_emoji || '';
   document.getElementById('edit-stat2-label').value = data.stat_2_label || '';
+  setIconPreview('stat2-icon-preview', data.stat_2_icon_url, data.stat_2_emoji);
   document.getElementById('edit-stat3-emoji').value = data.stat_3_emoji || '';
   document.getElementById('edit-stat3-label').value = data.stat_3_label || '';
+  setIconPreview('stat3-icon-preview', data.stat_3_icon_url, data.stat_3_emoji);
 
   // Contact
   document.getElementById('edit-email').value = data.email || '';
@@ -127,11 +132,38 @@ async function loadProfileData() {
   document.getElementById('edit-github').value = data.github_url || '';
 }
 
+// ── Icon Preview Helpers ─────────────────────
+
+function setIconPreview(previewId, iconUrl, emoji) {
+  const el = document.getElementById(previewId);
+  if (!el) return;
+  if (iconUrl) {
+    el.innerHTML = `<img src="${iconUrl}" class="w-full h-full object-contain">`;
+  } else if (emoji) {
+    el.textContent = emoji;
+  }
+}
+
+function previewInlineIcon(input, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    document.getElementById(previewId).innerHTML = `<img src="${e.target.result}" class="w-full h-full object-contain">`;
+  };
+  reader.readAsDataURL(file);
+}
+
 // ── Save Profile ─────────────────────────────
 
 async function saveProfile() {
   const avatarFile = document.getElementById('avatar-upload').files[0];
   const aboutPhotoFile = document.getElementById('about-photo-upload').files[0];
+  const badge1IconFile = document.getElementById('badge1-icon-upload').files[0];
+  const badge2IconFile = document.getElementById('badge2-icon-upload').files[0];
+  const stat1IconFile = document.getElementById('stat1-icon-upload').files[0];
+  const stat2IconFile = document.getElementById('stat2-icon-upload').files[0];
+  const stat3IconFile = document.getElementById('stat3-icon-upload').files[0];
 
   const updates = {
     name: document.getElementById('edit-name').value,
@@ -166,6 +198,13 @@ async function saveProfile() {
     const url = await uploadImage(aboutPhotoFile, 'about-photo');
     if (url) updates.about_photo_url = url;
   }
+
+  // Upload badge/stat icons if selected
+  if (badge1IconFile) { const url = await uploadImage(badge1IconFile, 'badge1-icon'); if (url) updates.badge_1_icon_url = url; }
+  if (badge2IconFile) { const url = await uploadImage(badge2IconFile, 'badge2-icon'); if (url) updates.badge_2_icon_url = url; }
+  if (stat1IconFile) { const url = await uploadImage(stat1IconFile, 'stat1-icon'); if (url) updates.stat_1_icon_url = url; }
+  if (stat2IconFile) { const url = await uploadImage(stat2IconFile, 'stat2-icon'); if (url) updates.stat_2_icon_url = url; }
+  if (stat3IconFile) { const url = await uploadImage(stat3IconFile, 'stat3-icon'); if (url) updates.stat_3_icon_url = url; }
 
   const { error } = await db
     .from('profile')

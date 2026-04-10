@@ -170,13 +170,33 @@
         <div class="pt-4 border-t border-gray-800">
           <label class="block text-sm text-gray-400 mb-3">Floating Badges</label>
           <div class="grid grid-cols-2 gap-4">
-            <div class="flex gap-2">
-              <input id="edit-badge1-emoji" type="text" class="w-16 px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none text-center text-lg" maxlength="4" placeholder="✨">
-              <input id="edit-badge1-text" type="text" class="flex-1 px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none" placeholder="Passionate">
+            <div class="p-3 rounded-xl bg-gray-800/40 border border-gray-700/50 space-y-2">
+              <p class="text-xs text-gray-500">Badge 1</p>
+              <div class="flex items-center gap-2">
+                <div id="badge1-icon-preview" class="w-10 h-10 rounded-lg bg-gray-900 border border-gray-700 flex items-center justify-center overflow-hidden text-lg shrink-0"></div>
+                <div class="flex-1 space-y-1">
+                  <input id="edit-badge1-emoji" type="text" class="w-full px-2 py-1 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none text-sm" maxlength="4" placeholder="Emoji (or upload icon)">
+                  <div class="flex gap-1">
+                    <input id="badge1-icon-upload" type="file" accept="image/*" class="hidden" onchange="previewInlineIcon(this, 'badge1-icon-preview')">
+                    <button onclick="document.getElementById('badge1-icon-upload').click()" class="px-2 py-0.5 text-xs rounded bg-gray-900 border border-gray-700 hover:border-ocean transition-colors">Upload Icon</button>
+                  </div>
+                </div>
+              </div>
+              <input id="edit-badge1-text" type="text" class="w-full px-2 py-1 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none text-sm" placeholder="Passionate">
             </div>
-            <div class="flex gap-2">
-              <input id="edit-badge2-emoji" type="text" class="w-16 px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none text-center text-lg" maxlength="4" placeholder="📚">
-              <input id="edit-badge2-text" type="text" class="flex-1 px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none" placeholder="Dedicated">
+            <div class="p-3 rounded-xl bg-gray-800/40 border border-gray-700/50 space-y-2">
+              <p class="text-xs text-gray-500">Badge 2</p>
+              <div class="flex items-center gap-2">
+                <div id="badge2-icon-preview" class="w-10 h-10 rounded-lg bg-gray-900 border border-gray-700 flex items-center justify-center overflow-hidden text-lg shrink-0"></div>
+                <div class="flex-1 space-y-1">
+                  <input id="edit-badge2-emoji" type="text" class="w-full px-2 py-1 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none text-sm" maxlength="4" placeholder="Emoji (or upload icon)">
+                  <div class="flex gap-1">
+                    <input id="badge2-icon-upload" type="file" accept="image/*" class="hidden" onchange="previewInlineIcon(this, 'badge2-icon-preview')">
+                    <button onclick="document.getElementById('badge2-icon-upload').click()" class="px-2 py-0.5 text-xs rounded bg-gray-900 border border-gray-700 hover:border-ocean transition-colors">Upload Icon</button>
+                  </div>
+                </div>
+              </div>
+              <input id="edit-badge2-text" type="text" class="w-full px-2 py-1 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none text-sm" placeholder="Dedicated">
             </div>
           </div>
         </div>
@@ -185,17 +205,29 @@
         <div class="pt-4 border-t border-gray-800">
           <label class="block text-sm text-gray-400 mb-3">Quick Stats</label>
           <div class="grid grid-cols-3 gap-3">
-            <div class="space-y-2">
-              <input id="edit-stat1-emoji" type="text" class="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none text-center text-lg" maxlength="4" placeholder="🏫">
-              <input id="edit-stat1-label" type="text" class="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none text-center text-sm" placeholder="Teaching">
+            <div class="p-3 rounded-xl bg-gray-800/40 border border-gray-700/50 space-y-2 text-center">
+              <p class="text-xs text-gray-500">Stat 1</p>
+              <div id="stat1-icon-preview" class="w-10 h-10 mx-auto rounded-lg bg-gray-900 border border-gray-700 flex items-center justify-center overflow-hidden text-lg"></div>
+              <input id="edit-stat1-emoji" type="text" class="w-full px-2 py-1 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none text-center text-sm" maxlength="4" placeholder="Emoji">
+              <input id="stat1-icon-upload" type="file" accept="image/*" class="hidden" onchange="previewInlineIcon(this, 'stat1-icon-preview')">
+              <button onclick="document.getElementById('stat1-icon-upload').click()" class="px-2 py-0.5 text-xs rounded bg-gray-900 border border-gray-700 hover:border-ocean transition-colors">Upload Icon</button>
+              <input id="edit-stat1-label" type="text" class="w-full px-2 py-1 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none text-center text-sm" placeholder="Teaching">
             </div>
-            <div class="space-y-2">
-              <input id="edit-stat2-emoji" type="text" class="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none text-center text-lg" maxlength="4" placeholder="💻">
-              <input id="edit-stat2-label" type="text" class="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none text-center text-sm" placeholder="EdTech">
+            <div class="p-3 rounded-xl bg-gray-800/40 border border-gray-700/50 space-y-2 text-center">
+              <p class="text-xs text-gray-500">Stat 2</p>
+              <div id="stat2-icon-preview" class="w-10 h-10 mx-auto rounded-lg bg-gray-900 border border-gray-700 flex items-center justify-center overflow-hidden text-lg"></div>
+              <input id="edit-stat2-emoji" type="text" class="w-full px-2 py-1 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none text-center text-sm" maxlength="4" placeholder="Emoji">
+              <input id="stat2-icon-upload" type="file" accept="image/*" class="hidden" onchange="previewInlineIcon(this, 'stat2-icon-preview')">
+              <button onclick="document.getElementById('stat2-icon-upload').click()" class="px-2 py-0.5 text-xs rounded bg-gray-900 border border-gray-700 hover:border-ocean transition-colors">Upload Icon</button>
+              <input id="edit-stat2-label" type="text" class="w-full px-2 py-1 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none text-center text-sm" placeholder="EdTech">
             </div>
-            <div class="space-y-2">
-              <input id="edit-stat3-emoji" type="text" class="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none text-center text-lg" maxlength="4" placeholder="💡">
-              <input id="edit-stat3-label" type="text" class="w-full px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none text-center text-sm" placeholder="Innovation">
+            <div class="p-3 rounded-xl bg-gray-800/40 border border-gray-700/50 space-y-2 text-center">
+              <p class="text-xs text-gray-500">Stat 3</p>
+              <div id="stat3-icon-preview" class="w-10 h-10 mx-auto rounded-lg bg-gray-900 border border-gray-700 flex items-center justify-center overflow-hidden text-lg"></div>
+              <input id="edit-stat3-emoji" type="text" class="w-full px-2 py-1 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none text-center text-sm" maxlength="4" placeholder="Emoji">
+              <input id="stat3-icon-upload" type="file" accept="image/*" class="hidden" onchange="previewInlineIcon(this, 'stat3-icon-preview')">
+              <button onclick="document.getElementById('stat3-icon-upload').click()" class="px-2 py-0.5 text-xs rounded bg-gray-900 border border-gray-700 hover:border-ocean transition-colors">Upload Icon</button>
+              <input id="edit-stat3-label" type="text" class="w-full px-2 py-1 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none text-center text-sm" placeholder="Innovation">
             </div>
           </div>
         </div>
