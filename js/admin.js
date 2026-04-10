@@ -1,0 +1,341 @@
+// ============================================
+// ADMIN PANEL — CRUD Operations
+// ============================================
+
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let isLoggedIn = false;
+const COLORS = ['coral', 'sunflower', 'mint', 'ocean', 'grape', 'blush'];
+
+// ── Toast Notifications ──────────────────────
+
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  const bg = type === 'success' ? 'bg-mint' : type === 'error' ? 'bg-coral' : 'bg-ocean';
+  toast.className = `toast px-5 py-3 rounded-xl ${bg} text-gray-900 font-medium text-sm shadow-lg`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// ── Login ────────────────────────────────────
+
+async function attemptLogin() {
+  const password = document.getElementById('login-password').value;
+  if (!password) return;
+
+  try {
+    const { data, error } = await db
+      .from('profile')
+      .select('admin_password')
+      .eq('id', 1)
+      .single();
+
+    console.log('Login response:', { data, error });
+
+    if (error) {
+      showToast('Could not connect to database: ' + error.message, 'error');
+      return;
+    }
+
+  if (data.admin_password === password) {
+    isLoggedIn = true;
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('admin-dashboard').classList.remove('hidden');
+    loadProfileData();
+    loadSkillsData();
+  } else {
+    document.getElementById('login-error').classList.remove('hidden');
+  }
+  } catch (err) {
+    console.error('Login error:', err);
+    showToast('Connection error: ' + err.message, 'error');
+  }
+}
+
+// Enter key on password field
+document.getElementById('login-password').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') attemptLogin();
+});
+
+function logout() {
+  isLoggedIn = false;
+  document.getElementById('admin-dashboard').classList.add('hidden');
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('login-password').value = '';
+}
+
+// ── Tab Switching ────────────────────────────
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+  document.querySelectorAll('.tab-btn').forEach(b => {
+    b.classList.remove('border-ocean', 'text-ocean');
+    b.classList.add('border-transparent', 'text-gray-400');
+  });
+  document.getElementById(`tab-${tab}`).classList.remove('hidden');
+  const btn = document.querySelector(`[data-tab="${tab}"]`);
+  btn.classList.add('border-ocean', 'text-ocean');
+  btn.classList.remove('border-transparent', 'text-gray-400');
+}
+
+// ── Load Profile Data ────────────────────────
+
+async function loadProfileData() {
+  const { data, error } = await db
+    .from('profile')
+    .select('*')
+    .eq('id', 1)
+    .single();
+
+  if (error || !data) return;
+
+  // Hero
+  document.getElementById('edit-name').value = data.name || '';
+  document.getElementById('edit-title').value = data.title || '';
+  document.getElementById('edit-tagline').value = data.tagline || '';
+  if (data.avatar_url) {
+    document.getElementById('avatar-preview').innerHTML = `<img src="${data.avatar_url}" class="w-full h-full object-cover">`;
+  }
+
+  // About
+  document.getElementById('edit-about-heading').value = data.about_heading || '';
+  document.getElementById('edit-about-text1').value = data.about_text_1 || '';
+  document.getElementById('edit-about-text2').value = data.about_text_2 || '';
+  if (data.about_photo_url) {
+    document.getElementById('about-photo-preview').innerHTML = `<img src="${data.about_photo_url}" class="w-full h-full object-cover rounded-xl">`;
+  }
+
+  // Contact
+  document.getElementById('edit-email').value = data.email || '';
+  document.getElementById('edit-linkedin').value = data.linkedin_url || '';
+  document.getElementById('edit-github').value = data.github_url || '';
+}
+
+// ── Save Profile ─────────────────────────────
+
+async function saveProfile() {
+  const avatarFile = document.getElementById('avatar-upload').files[0];
+  const aboutPhotoFile = document.getElementById('about-photo-upload').files[0];
+
+  const updates = {
+    name: document.getElementById('edit-name').value,
+    title: document.getElementById('edit-title').value,
+    tagline: document.getElementById('edit-tagline').value,
+    about_heading: document.getElementById('edit-about-heading').value,
+    about_text_1: document.getElementById('edit-about-text1').value,
+    about_text_2: document.getElementById('edit-about-text2').value,
+    email: document.getElementById('edit-email').value,
+    linkedin_url: document.getElementById('edit-linkedin').value,
+    github_url: document.getElementById('edit-github').value,
+  };
+
+  // Upload avatar if selected
+  if (avatarFile) {
+    const url = await uploadImage(avatarFile, 'avatar');
+    if (url) updates.avatar_url = url;
+  }
+
+  // Upload about photo if selected
+  if (aboutPhotoFile) {
+    const url = await uploadImage(aboutPhotoFile, 'about-photo');
+    if (url) updates.about_photo_url = url;
+  }
+
+  const { error } = await db
+    .from('profile')
+    .update(updates)
+    .eq('id', 1);
+
+  if (error) {
+    showToast('Failed to save: ' + error.message, 'error');
+  } else {
+    showToast('Saved successfully!');
+  }
+}
+
+// ── Image Upload ─────────────────────────────
+
+async function uploadImage(file, prefix) {
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('File too large (max 2MB)', 'error');
+    return null;
+  }
+
+  const ext = file.name.split('.').pop();
+  const fileName = `${prefix}-${Date.now()}.${ext}`;
+
+  const { data, error } = await db.storage
+    .from('images')
+    .upload(fileName, file, { upsert: true });
+
+  if (error) {
+    showToast('Upload failed: ' + error.message, 'error');
+    return null;
+  }
+
+  const { data: urlData } = db.storage
+    .from('images')
+    .getPublicUrl(fileName);
+
+  return urlData.publicUrl;
+}
+
+function previewImage(input, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const preview = document.getElementById(previewId);
+    const isRound = previewId === 'avatar-preview';
+    preview.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover ${isRound ? 'rounded-full' : 'rounded-xl'}">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── Skills CRUD ──────────────────────────────
+
+let skillsData = [];
+
+async function loadSkillsData() {
+  const { data, error } = await db
+    .from('skills')
+    .select('*')
+    .order('sort_order', { ascending: true });
+
+  if (error) return;
+  skillsData = data || [];
+  renderSkillsList();
+}
+
+function renderSkillsList() {
+  const container = document.getElementById('skills-list');
+  if (skillsData.length === 0) {
+    container.innerHTML = '<p class="text-gray-500 text-center py-8">No skills yet. Click "+ Add Skill" to get started.</p>';
+    return;
+  }
+
+  container.innerHTML = skillsData.map((skill, index) => `
+    <div class="p-5 rounded-2xl bg-gray-800/60 border border-gray-700/50 space-y-4" data-id="${skill.id}">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl">${skill.emoji || '?'}</span>
+          <span class="font-display font-semibold">${skill.title || 'Untitled'}</span>
+          <span class="px-2 py-0.5 text-xs rounded-full bg-${skill.color}/20 text-${skill.color}">${skill.color}</span>
+        </div>
+        <div class="flex gap-2">
+          ${index > 0 ? `<button onclick="moveSkill('${skill.id}', -1)" class="p-1.5 rounded-lg hover:bg-gray-700 text-gray-400 transition-colors" title="Move up">&#9650;</button>` : ''}
+          ${index < skillsData.length - 1 ? `<button onclick="moveSkill('${skill.id}', 1)" class="p-1.5 rounded-lg hover:bg-gray-700 text-gray-400 transition-colors" title="Move down">&#9660;</button>` : ''}
+          <button onclick="toggleEditSkill('${skill.id}')" class="p-1.5 rounded-lg hover:bg-gray-700 text-ocean transition-colors" title="Edit">&#9998;</button>
+          <button onclick="deleteSkill('${skill.id}')" class="p-1.5 rounded-lg hover:bg-gray-700 text-coral transition-colors" title="Delete">&#128465;</button>
+        </div>
+      </div>
+      <div id="edit-skill-${skill.id}" class="hidden space-y-3">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-gray-500 mb-1">Emoji</label>
+            <input type="text" value="${skill.emoji || ''}" class="skill-emoji w-full px-3 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none text-lg" maxlength="4">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-500 mb-1">Color</label>
+            <select class="skill-color w-full px-3 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none">
+              ${COLORS.map(c => `<option value="${c}" ${skill.color === c ? 'selected' : ''}>${c}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs text-gray-500 mb-1">Title</label>
+          <input type="text" value="${skill.title || ''}" class="skill-title w-full px-3 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs text-gray-500 mb-1">Description</label>
+          <textarea rows="2" class="skill-desc w-full px-3 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none resize-none">${skill.description || ''}</textarea>
+        </div>
+        <button onclick="saveSkill('${skill.id}')" class="px-4 py-2 text-sm rounded-lg bg-ocean/20 text-ocean hover:bg-ocean/30 transition-colors">
+          Save Skill
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleEditSkill(id) {
+  const el = document.getElementById(`edit-skill-${id}`);
+  el.classList.toggle('hidden');
+}
+
+async function saveSkill(id) {
+  const container = document.querySelector(`[data-id="${id}"]`);
+  const updates = {
+    emoji: container.querySelector('.skill-emoji').value,
+    title: container.querySelector('.skill-title').value,
+    description: container.querySelector('.skill-desc').value,
+    color: container.querySelector('.skill-color').value,
+  };
+
+  const { error } = await db
+    .from('skills')
+    .update(updates)
+    .eq('id', id);
+
+  if (error) {
+    showToast('Failed to save skill', 'error');
+  } else {
+    showToast('Skill updated!');
+    loadSkillsData();
+  }
+}
+
+async function addSkill() {
+  const maxOrder = skillsData.length > 0
+    ? Math.max(...skillsData.map(s => s.sort_order || 0))
+    : 0;
+
+  const { error } = await db
+    .from('skills')
+    .insert({
+      emoji: '&#11088;',
+      title: 'New Skill',
+      description: 'Describe this skill...',
+      color: COLORS[skillsData.length % COLORS.length],
+      sort_order: maxOrder + 1,
+    });
+
+  if (error) {
+    showToast('Failed to add skill', 'error');
+  } else {
+    showToast('Skill added!');
+    loadSkillsData();
+  }
+}
+
+async function deleteSkill(id) {
+  if (!confirm('Delete this skill?')) return;
+
+  const { error } = await db
+    .from('skills')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    showToast('Failed to delete skill', 'error');
+  } else {
+    showToast('Skill deleted');
+    loadSkillsData();
+  }
+}
+
+async function moveSkill(id, direction) {
+  const index = skillsData.findIndex(s => s.id === id);
+  const swapIndex = index + direction;
+  if (swapIndex < 0 || swapIndex >= skillsData.length) return;
+
+  const current = skillsData[index];
+  const swap = skillsData[swapIndex];
+
+  await db.from('skills').update({ sort_order: swap.sort_order }).eq('id', current.id);
+  await db.from('skills').update({ sort_order: current.sort_order }).eq('id', swap.id);
+
+  loadSkillsData();
+}

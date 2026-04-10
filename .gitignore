@@ -1,0 +1,3 @@
+# Don't commit SQL setup files
+setup.sql
+fix-storage.sql
