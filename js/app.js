@@ -86,7 +86,7 @@ async function loadSkills() {
     const card = document.createElement('div');
     card.className = `reveal skill-card transition-all duration-300 p-6 rounded-3xl bg-gray-800/60 border border-gray-700/50 ${colors.border} group cursor-default`;
     card.innerHTML = `
-      <div class="w-14 h-14 rounded-2xl ${colors.iconBg} flex items-center justify-center text-3xl mb-5 group-hover:scale-110 transition-transform">${skill.emoji}</div>
+      <div class="w-14 h-14 rounded-2xl ${colors.iconBg} flex items-center justify-center text-3xl mb-5 group-hover:scale-110 transition-transform">${skill.icon_url ? `<img src="${skill.icon_url}" class="w-8 h-8 object-contain">` : skill.emoji}</div>
       <h3 class="font-display font-bold text-lg mb-2">${skill.title}</h3>
       <p class="text-gray-400 text-sm leading-relaxed">${skill.description}</p>
     `;

@@ -221,7 +221,9 @@ function renderSkillsList() {
     <div class="p-5 rounded-2xl bg-gray-800/60 border border-gray-700/50 space-y-4" data-id="${skill.id}">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <span class="text-2xl">${skill.emoji || '?'}</span>
+          ${skill.icon_url
+            ? `<img src="${skill.icon_url}" class="w-8 h-8 object-contain rounded">`
+            : `<span class="text-2xl">${skill.emoji || '?'}</span>`}
           <span class="font-display font-semibold">${skill.title || 'Untitled'}</span>
           <span class="px-2 py-0.5 text-xs rounded-full bg-${skill.color}/20 text-${skill.color}">${skill.color}</span>
         </div>
@@ -233,10 +235,23 @@ function renderSkillsList() {
         </div>
       </div>
       <div id="edit-skill-${skill.id}" class="hidden space-y-3">
-        <div class="grid grid-cols-2 gap-3">
+        <div class="grid grid-cols-3 gap-3">
           <div>
-            <label class="block text-xs text-gray-500 mb-1">Emoji</label>
+            <label class="block text-xs text-gray-500 mb-1">Emoji (or leave empty if using icon)</label>
             <input type="text" value="${skill.emoji || ''}" class="skill-emoji w-full px-3 py-2 rounded-lg bg-gray-900 border border-gray-700 focus:border-ocean focus:outline-none text-lg" maxlength="4">
+          </div>
+          <div>
+            <label class="block text-xs text-gray-500 mb-1">Custom Icon (overrides emoji)</label>
+            <div class="flex items-center gap-2">
+              <div class="skill-icon-preview w-10 h-10 rounded-lg bg-gray-900 border border-gray-700 flex items-center justify-center overflow-hidden">
+                ${skill.icon_url ? `<img src="${skill.icon_url}" class="w-full h-full object-contain">` : '<span class="text-gray-600 text-xs">none</span>'}
+              </div>
+              <div>
+                <input type="file" accept="image/*" class="skill-icon-upload hidden" onchange="previewSkillIcon(this, '${skill.id}')">
+                <button onclick="this.parentElement.querySelector('.skill-icon-upload').click()" class="px-2 py-1 text-xs rounded-lg bg-gray-900 border border-gray-700 hover:border-ocean transition-colors">Upload</button>
+                ${skill.icon_url ? `<button onclick="clearSkillIcon('${skill.id}')" class="px-2 py-1 text-xs rounded-lg text-coral hover:bg-gray-700 transition-colors">Clear</button>` : ''}
+              </div>
+            </div>
           </div>
           <div>
             <label class="block text-xs text-gray-500 mb-1">Color</label>
@@ -268,12 +283,20 @@ function toggleEditSkill(id) {
 
 async function saveSkill(id) {
   const container = document.querySelector(`[data-id="${id}"]`);
+  const iconFile = container.querySelector('.skill-icon-upload')?.files[0];
+
   const updates = {
     emoji: container.querySelector('.skill-emoji').value,
     title: container.querySelector('.skill-title').value,
     description: container.querySelector('.skill-desc').value,
     color: container.querySelector('.skill-color').value,
   };
+
+  // Upload icon if selected
+  if (iconFile) {
+    const url = await uploadImage(iconFile, `skill-icon-${id}`);
+    if (url) updates.icon_url = url;
+  }
 
   const { error } = await db
     .from('skills')
@@ -323,6 +346,30 @@ async function deleteSkill(id) {
     showToast('Failed to delete skill', 'error');
   } else {
     showToast('Skill deleted');
+    loadSkillsData();
+  }
+}
+
+function previewSkillIcon(input, skillId) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const container = document.querySelector(`[data-id="${skillId}"]`);
+    const preview = container.querySelector('.skill-icon-preview');
+    preview.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-contain">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function clearSkillIcon(id) {
+  const { error } = await db
+    .from('skills')
+    .update({ icon_url: null })
+    .eq('id', id);
+
+  if (!error) {
+    showToast('Icon cleared');
     loadSkillsData();
   }
 }
