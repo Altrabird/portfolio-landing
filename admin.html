@@ -254,20 +254,54 @@
       <!-- CONTACT TAB -->
       <div id="tab-contact" class="tab-panel hidden space-y-6">
         <h2 class="font-display font-bold text-xl mb-2">Contact Links</h2>
+        <p class="text-gray-500 text-sm">Leave a field empty to hide it on the site.</p>
 
-        <div>
-          <label class="block text-sm text-gray-400 mb-2">Email Address</label>
-          <input id="edit-email" type="email" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none" placeholder="your@email.com">
+        <!-- Email -->
+        <div class="p-4 rounded-xl bg-gray-800/40 border border-gray-700/50 space-y-3">
+          <label class="block text-sm text-gray-400">Email</label>
+          <input id="edit-email" type="email" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none" placeholder="your@email.com (leave empty to hide)">
+          <div class="flex items-center gap-3">
+            <div id="email-icon-preview" class="w-10 h-10 rounded-lg bg-gray-900 border border-gray-700 flex items-center justify-center overflow-hidden shrink-0"></div>
+            <div>
+              <input id="email-icon-upload" type="file" accept="image/*" class="hidden" onchange="previewInlineIcon(this, 'email-icon-preview')">
+              <button onclick="document.getElementById('email-icon-upload').click()" class="px-3 py-1 text-xs rounded-lg bg-gray-900 border border-gray-700 hover:border-ocean transition-colors">Upload Icon</button>
+              <span class="text-gray-600 text-xs ml-2">Custom icon (optional)</span>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label class="block text-sm text-gray-400 mb-2">LinkedIn URL</label>
-          <input id="edit-linkedin" type="url" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none" placeholder="https://linkedin.com/in/yourname">
+        <!-- LinkedIn -->
+        <div class="p-4 rounded-xl bg-gray-800/40 border border-gray-700/50 space-y-3">
+          <label class="block text-sm text-gray-400">LinkedIn</label>
+          <input id="edit-linkedin" type="url" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none" placeholder="https://linkedin.com/in/yourname (leave empty to hide)">
+          <div class="flex items-center gap-3">
+            <div id="linkedin-icon-preview" class="w-10 h-10 rounded-lg bg-gray-900 border border-gray-700 flex items-center justify-center overflow-hidden shrink-0"></div>
+            <div>
+              <input id="linkedin-icon-upload" type="file" accept="image/*" class="hidden" onchange="previewInlineIcon(this, 'linkedin-icon-preview')">
+              <button onclick="document.getElementById('linkedin-icon-upload').click()" class="px-3 py-1 text-xs rounded-lg bg-gray-900 border border-gray-700 hover:border-ocean transition-colors">Upload Icon</button>
+              <span class="text-gray-600 text-xs ml-2">Custom icon (optional)</span>
+            </div>
+          </div>
         </div>
 
-        <div>
-          <label class="block text-sm text-gray-400 mb-2">GitHub URL</label>
-          <input id="edit-github" type="url" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none" placeholder="https://github.com/yourname">
+        <!-- GitHub -->
+        <div class="p-4 rounded-xl bg-gray-800/40 border border-gray-700/50 space-y-3">
+          <label class="block text-sm text-gray-400">GitHub</label>
+          <input id="edit-github" type="url" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none" placeholder="https://github.com/yourname (leave empty to hide)">
+          <div class="flex items-center gap-3">
+            <div id="github-icon-preview" class="w-10 h-10 rounded-lg bg-gray-900 border border-gray-700 flex items-center justify-center overflow-hidden shrink-0"></div>
+            <div>
+              <input id="github-icon-upload" type="file" accept="image/*" class="hidden" onchange="previewInlineIcon(this, 'github-icon-preview')">
+              <button onclick="document.getElementById('github-icon-upload').click()" class="px-3 py-1 text-xs rounded-lg bg-gray-900 border border-gray-700 hover:border-ocean transition-colors">Upload Icon</button>
+              <span class="text-gray-600 text-xs ml-2">Custom icon (optional)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer Text -->
+        <div class="pt-4 border-t border-gray-800">
+          <label class="block text-sm text-gray-400 mb-2">Footer Text</label>
+          <input id="edit-footer" type="text" class="w-full px-4 py-3 rounded-xl bg-gray-800 border border-gray-700 focus:border-ocean focus:outline-none" placeholder="© 2026 Your Name. Your tagline here.">
         </div>
 
         <button onclick="saveProfile()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-ocean to-grape font-semibold hover:opacity-90 transition-opacity">

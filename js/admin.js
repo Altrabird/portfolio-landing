@@ -130,6 +130,12 @@ async function loadProfileData() {
   document.getElementById('edit-email').value = data.email || '';
   document.getElementById('edit-linkedin').value = data.linkedin_url || '';
   document.getElementById('edit-github').value = data.github_url || '';
+  setIconPreview('email-icon-preview', data.email_icon_url, null);
+  setIconPreview('linkedin-icon-preview', data.linkedin_icon_url, null);
+  setIconPreview('github-icon-preview', data.github_icon_url, null);
+
+  // Footer
+  document.getElementById('edit-footer').value = data.footer_text || '';
 }
 
 // ── Icon Preview Helpers ─────────────────────
@@ -164,6 +170,9 @@ async function saveProfile() {
   const stat1IconFile = document.getElementById('stat1-icon-upload').files[0];
   const stat2IconFile = document.getElementById('stat2-icon-upload').files[0];
   const stat3IconFile = document.getElementById('stat3-icon-upload').files[0];
+  const emailIconFile = document.getElementById('email-icon-upload').files[0];
+  const linkedinIconFile = document.getElementById('linkedin-icon-upload').files[0];
+  const githubIconFile = document.getElementById('github-icon-upload').files[0];
 
   const updates = {
     name: document.getElementById('edit-name').value,
@@ -185,6 +194,7 @@ async function saveProfile() {
     stat_2_label: document.getElementById('edit-stat2-label').value,
     stat_3_emoji: document.getElementById('edit-stat3-emoji').value,
     stat_3_label: document.getElementById('edit-stat3-label').value,
+    footer_text: document.getElementById('edit-footer').value,
   };
 
   // Upload avatar if selected
@@ -205,6 +215,9 @@ async function saveProfile() {
   if (stat1IconFile) { const url = await uploadImage(stat1IconFile, 'stat1-icon'); if (url) updates.stat_1_icon_url = url; }
   if (stat2IconFile) { const url = await uploadImage(stat2IconFile, 'stat2-icon'); if (url) updates.stat_2_icon_url = url; }
   if (stat3IconFile) { const url = await uploadImage(stat3IconFile, 'stat3-icon'); if (url) updates.stat_3_icon_url = url; }
+  if (emailIconFile) { const url = await uploadImage(emailIconFile, 'email-icon'); if (url) updates.email_icon_url = url; }
+  if (linkedinIconFile) { const url = await uploadImage(linkedinIconFile, 'linkedin-icon'); if (url) updates.linkedin_icon_url = url; }
+  if (githubIconFile) { const url = await uploadImage(githubIconFile, 'github-icon'); if (url) updates.github_icon_url = url; }
 
   const { error } = await db
     .from('profile')
